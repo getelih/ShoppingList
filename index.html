@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping List</title>
+  <script src="https://unpkg.com/react/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    function ShoppingList() {
+      const [itemsToBuy, setItemsToBuy] = React.useState(['Piim', 'Leib', 'Munad']);
+      const [itemsBought, setItemsBought] = React.useState([]);
+      const [newItem, setNewItem] = React.useState('');
+
+      const Check = (item) => {
+        setItemsToBuy(itemsToBuy.filter((i) => i !== item));
+        setItemsBought([...itemsBought, item]);
+      };
+
+      const Uncheck = (item) => {
+        setItemsBought(itemsBought.filter((i) => i !== item));
+        setItemsToBuy([...itemsToBuy, item]);
+      };
+
+      const AddItem = (e) => {
+        e.preventDefault();
+        if (newItem.trim()) {
+          setItemsToBuy([...itemsToBuy, newItem.trim()]);
+          setNewItem('');
+        }
+      };
+
+      return (
+        <div>
+          <h2>Vaja osta</h2>
+          <ul>
+            {itemsToBuy.map((item, index) => (
+              <li key={index}>
+                <input
+                  type="checkbox"
+                  onChange={() => Check(item)}
+                />
+                {item}
+              </li>
+            ))}
+          </ul>
+          <form onSubmit={AddItem}>
+            <input
+              type="text"
+              value={newItem}
+              onChange={(e) => setNewItem(e.target.value)}
+              placeholder="Lisa uus toode"
+            />
+            <button type="submit">Lisa</button>
+          </form>
+
+          <h2>Ostetud</h2>
+          <ul>
+            {itemsBought.map((item, index) => (
+              <li key={index}>
+                <input
+                  type="checkbox"
+                  checked
+                  onChange={() => Uncheck(item)}
+                />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<ShoppingList />, document.getElementById('root'));
+  </script>
+</body>
+</html>
